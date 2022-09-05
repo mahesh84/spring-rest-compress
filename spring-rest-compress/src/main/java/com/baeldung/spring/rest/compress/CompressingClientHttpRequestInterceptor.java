@@ -32,7 +32,11 @@ public class CompressingClientHttpRequestInterceptor implements ClientHttpReques
         HttpHeaders httpHeaders = req.getHeaders();
         httpHeaders.add(HttpHeaders.CONTENT_ENCODING, GZIP_ENCODING);
         httpHeaders.add(HttpHeaders.ACCEPT_ENCODING, GZIP_ENCODING);
-        return exec.execute(req, GzipUtils.compress(body));
+        LOG.info("Body size before compressing:"+body.length);
+        byte[] compressedBodyContents=GzipUtils.compress(body);
+        LOG.info("Body size After compressing:"+compressedBodyContents.length);
+        ClientHttpResponse response =  exec.execute(req,compressedBodyContents );
+        return response;
     }
 
 }
